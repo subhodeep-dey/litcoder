@@ -60,7 +60,7 @@ int main() {
             int intValue = std::stoi(value);
             editor.deleteChars(intValue);
         } else if (command == "4") {
-            editor. Undo();
+            editor.undo();
         }
     }
 
