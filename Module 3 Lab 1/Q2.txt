@@ -8,15 +8,21 @@ public:
         priority_queue<int, vector<int>, greater<int>> minHeap(candies.begin(), candies.end());
 
         int steps = 0;
-        while (minHeap.top() < target) {
+        while (!minHeap.empty() && minHeap.top() < target) {
             int leastSweet = minHeap.top();
             minHeap.pop();
-            int secondLeastSweet = minHeap.top();
-            minHeap.pop();
 
-            int newSweetness = leastSweet + 2 * secondLeastSweet;
-            minHeap.push(newSweetness);
-            steps++;
+            if (!minHeap.empty()) {
+                int secondLeastSweet = minHeap.top();
+                minHeap.pop();
+
+                int newSweetness = leastSweet + 2 * secondLeastSweet;
+                minHeap.push(newSweetness);
+                steps++;
+            }
+            else {
+                break;
+            }
         }
 
         return steps;
@@ -26,18 +32,26 @@ public:
 int main() {
     Solution solution;
     int target;
-    cin >> target;
+    if (!(cin >> target)) {
+        cerr << "Invalid target input." << endl;
+        return 1;
+    }
 
-    cin.ignore();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
 
     string input;
     getline(cin, input);
-    
+
     stringstream ss(input);
     vector<int> candies;
     int sweetness;
     while (ss >> sweetness) {
         candies.push_back(sweetness);
+    }
+
+    if (ss.fail() && !ss.eof()) {
+        cerr << "Invalid input format." << endl;
+        return 1;
     }
 
     int steps = solution.minStepsToReachTargetSweetness(target, candies);
